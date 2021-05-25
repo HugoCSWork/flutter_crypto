@@ -1,16 +1,17 @@
 # flutter_crypto
 
-A new Flutter project.
+Flutter application to display crypto information. UI was developed using this tutorial (https://www.youtube.com/watch?v=DkZC9o2fat4&t=1089s). A lot of Dio client information was gathered from this article (https://dev.to/ashishrawat2911/handling-network-calls-and-exceptions-in-flutter-54me).
 
 ## Getting Started
 
-This project is a starting point for a Flutter application.
+Project developed using - 
 
-A few resources to get you started if this is your first Flutter project:
+* Hive - Local database
+* Bloc - State Management
+* Dio - API Client
 
-- [Lab: Write your first Flutter app](https://flutter.dev/docs/get-started/codelab)
-- [Cookbook: Useful Flutter samples](https://flutter.dev/docs/cookbook)
+Still to develop
 
-For help getting started with Flutter, view our
-[online documentation](https://flutter.dev/docs), which offers tutorials,
-samples, guidance on mobile development, and a full API reference.
+* Firebase Auth
+* Firebase Push Notifications
+* Secure storage for API key
