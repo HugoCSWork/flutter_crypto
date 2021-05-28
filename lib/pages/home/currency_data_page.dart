@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_crypto/domain/currency/currency.dart';
-import 'package:flutter_crypto/pages/currency_data/widgets/currency_data_source.dart';
+import 'package:flutter_crypto/pages/home/widgets/currency_data_source.dart';
 import 'package:syncfusion_flutter_datagrid/datagrid.dart';
 
 class CurrencyDataPage extends StatelessWidget {
@@ -18,8 +18,8 @@ class CurrencyDataPage extends StatelessWidget {
       defaultColumnWidth: 100,
       frozenColumnsCount: 1,
       columns: buildGridColumns(),
-      source:
-          CurrencyDataSource(currencies: currencyData, isInternet: internet),
+      source: CurrencyDataSource(
+          context: context, currencies: currencyData, isInternet: internet),
     );
   }
 
@@ -45,6 +45,9 @@ class CurrencyDataPage extends StatelessWidget {
         GridTextColumn(
             columnName: CurrencyColumn.marketCap.toString(),
             label: buildLabel('Market Cap')),
+        GridTextColumn(
+            columnName: CurrencyColumn.marketCap.toString(),
+            label: buildLabel('Favourite')),
       ];
 
   Widget buildLabel(String text) => Center(child: Text(text));

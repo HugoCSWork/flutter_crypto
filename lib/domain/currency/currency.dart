@@ -1,4 +1,4 @@
-import 'package:flutter_crypto/pages/currency_data/widgets/currency_data_source.dart';
+import 'package:flutter_crypto/pages/home/widgets/currency_data_source.dart';
 import 'package:hive/hive.dart';
 
 part 'currency.g.dart';
@@ -23,6 +23,8 @@ class Currency extends HiveObject {
   final int rank;
   @HiveField(8)
   final int rankDelta;
+  @HiveField(9)
+  String favourite;
 
   Currency(
       {required this.id,
@@ -33,7 +35,8 @@ class Currency extends HiveObject {
       required this.oneDayChange,
       required this.marketCap,
       required this.rank,
-      required this.rankDelta});
+      required this.rankDelta,
+      this.favourite = "false"});
 
   Currency.fromJson(Map<String, dynamic> json)
       : this.id = json["id"],
@@ -44,7 +47,16 @@ class Currency extends HiveObject {
         this.oneDayChange = double.parse(json["1d"]["price_change_pct"]),
         this.marketCap = double.parse(json["market_cap"]),
         this.rank = int.parse(json["rank"]),
-        this.rankDelta = int.parse(json["rank_delta"]);
+        this.rankDelta = int.parse(json["rank_delta"]),
+        this.favourite = json["favourite"] ?? "false";
+
+  // Map<String, dynamic> toJson(Currency currency) => <String, dynamic>{
+  //   'id' : currency.id,
+  //   'logo_url': currency.logoUrl,
+  //   'name': currency.name,
+  //   'price': currency.price,
+  //   'price_change_pct': currency.oneHourChange,
+  // };
 
   Currency toDomain() => Currency(
       id: id,
@@ -55,7 +67,8 @@ class Currency extends HiveObject {
       oneHourChange: oneHourChange,
       price: price,
       rank: rank,
-      rankDelta: rankDelta);
+      rankDelta: rankDelta,
+      favourite: favourite);
 }
 
 class CurrencyComparable {
@@ -83,6 +96,10 @@ class CurrencyComparable {
         return self.price.compareTo(other.price);
       case CurrencyColumn.rank:
         return self.price.compareTo(other.rank);
+      case CurrencyColumn.rank:
+        return self.price.compareTo(other.rank);
+      case CurrencyColumn.favourite:
+        return self.favourite.compareTo(other.favourite);
     }
   }
 }

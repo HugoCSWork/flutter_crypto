@@ -1,21 +1,35 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_crypto/app/retrieve_data/retrieve_data_bloc.dart';
-import 'package:flutter_crypto/domain/currency/currency.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:intl/intl.dart';
 import 'package:syncfusion_flutter_datagrid/datagrid.dart';
 
-enum CurrencyColumn { id, rank, name, price, oneHChange, oneDChange, marketCap }
+import 'package:flutter_crypto/app/favourite_currency/favourite_currency_bloc.dart';
+import 'package:flutter_crypto/domain/currency/currency.dart';
+
+enum CurrencyColumn {
+  id,
+  rank,
+  name,
+  price,
+  oneHChange,
+  oneDChange,
+  marketCap,
+  favourite
+}
 
 class CurrencyDataSource extends DataGridSource {
   late List<DataGridRow> _currencies;
+  final BuildContext context;
   bool isInternet;
 
   @override
   List<DataGridRow> get rows => _currencies;
 
   CurrencyDataSource(
-      {required List<Currency> currencies, required this.isInternet}) {
+      {required this.context,
+      required List<Currency> currencies,
+      required this.isInternet}) {
     buildDataGrid(currencies);
   }
 
@@ -52,6 +66,8 @@ class CurrencyDataSource extends DataGridSource {
           case CurrencyColumn.marketCap:
             return buildDynamicRow(
                 NumberFormat.compact().format(currency.marketCap));
+          case CurrencyColumn.favourite:
+            return buildFavouriteIcon(currency);
 
           default:
             return Text("Hello");
@@ -106,4 +122,43 @@ class CurrencyDataSource extends DataGridSource {
           overflow: TextOverflow.ellipsis,
         ),
       );
+
+  Widget buildFavouriteIcon(Currency currency) => IconStar(currency: currency);
+}
+
+class IconStar extends StatefulWidget {
+  final Currency currency;
+
+  IconStar({Key? key, required this.currency}) : super(key: key);
+
+  @override
+  _IconStarState createState() => _IconStarState();
+}
+
+class _IconStarState extends State<IconStar> {
+  bool? isSelected;
+
+  @override
+  Widget build(BuildContext context) {
+    isSelected =
+        isSelected ?? widget.currency.favourite == "true" ? true : false;
+    return InkWell(
+        onTap: () {
+          context
+              .read<FavouriteCurrencyBloc>()
+              .add(FavouriteCurrencyEvent.favourite(widget.currency));
+          setState(() {
+            if (isSelected == true)
+              isSelected = false;
+            else
+              isSelected = true;
+          });
+        },
+        child: Container(
+          alignment: Alignment.center,
+          child: isSelected!
+              ? Icon(Icons.star, color: Colors.yellow)
+              : Icon(Icons.star_border),
+        ));
+  }
 }

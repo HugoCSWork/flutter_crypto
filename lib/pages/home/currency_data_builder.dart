@@ -1,8 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_crypto/app/retrieve_data/retrieve_data_bloc.dart';
-import 'package:flutter_crypto/domain/currency/currency.dart';
-import 'package:flutter_crypto/pages/currency_data/currency_data_page.dart';
+import 'package:flutter_crypto/pages/home/currency_data_page.dart';
 
 class CurrencyDataBuilder extends StatelessWidget {
   @override

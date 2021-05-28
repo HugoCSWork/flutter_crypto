@@ -26,13 +26,14 @@ class CurrencyAdapter extends TypeAdapter<Currency> {
       marketCap: fields[6] as double,
       rank: fields[7] as int,
       rankDelta: fields[8] as int,
+      favourite: fields[9] as String,
     );
   }
 
   @override
   void write(BinaryWriter writer, Currency obj) {
     writer
-      ..writeByte(9)
+      ..writeByte(10)
       ..writeByte(0)
       ..write(obj.id)
       ..writeByte(1)
@@ -50,7 +51,9 @@ class CurrencyAdapter extends TypeAdapter<Currency> {
       ..writeByte(7)
       ..write(obj.rank)
       ..writeByte(8)
-      ..write(obj.rankDelta);
+      ..write(obj.rankDelta)
+      ..writeByte(9)
+      ..write(obj.favourite);
   }
 
   @override

@@ -1,5 +1,3 @@
-import 'dart:convert';
-
 import 'package:dio/dio.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:hive/hive.dart';
@@ -21,12 +19,22 @@ class CurrencyRepository implements ICurrencyFacade {
     DioClient dioClient = DioClient(Dio(), baseUrl: baseUrl);
     try {
       final response = await dioClient.get('');
-      _hiveDatabase.addCurrencyToLocalDb(response);
-      List<dynamic> result =
-          await response.map((x) => Currency.fromJson(x)).toList();
+      List<Currency> result = await response
+          .map((x) => Currency.fromJson(x))
+          .toList()
+          .cast<Currency>();
 
-      List<Currency> convertedResults = result.cast<Currency>();
-      return ApiResult.success(data: convertedResults);
+      List<Currency> fromLocalDb = await getCurrencyDataFromLocalDatabase();
+
+      for (var i = 0; i < result.length; i++) {
+        if (fromLocalDb[i].favourite == "true") {
+          result[i].favourite = "true";
+        }
+      }
+
+      await _hiveDatabase.addCurrencyToLocalDb(result);
+
+      return ApiResult.success(data: result);
     } catch (e) {
       return ApiResult.failure(error: NetworkExceptions.getDioException(e));
     }
@@ -38,5 +46,10 @@ class CurrencyRepository implements ICurrencyFacade {
     var results = currencyData.values.toList().cast<Currency>();
     await currencyData.close();
     return results;
+  }
+
+  @override
+  Future<bool> updateCurrencyFavouriteField(Currency currency) async {
+    return await _hiveDatabase.updateCurrencyFavourite(currency);
   }
 }
